@@ -1,0 +1,11 @@
+node_modules/
+dist/
+upstream-raven/
+.raven-local/
+.raven/
+work/
+output/
+.playwright-cli/
+.env.local
+*.log
+*.tsbuildinfo

@@ -1,0 +1,33 @@
+{
+  "name": "raven-spatial",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4173 --strictPort",
+    "build": "tsc -b && vite build",
+    "start": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "test": "vitest run src/",
+    "raven": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-raven.ps1",
+    "sign-in": "python scripts/sign-in.py",
+    "configure:codex": "uv run --project upstream-raven --no-sync python scripts/configure-codex.py"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@xyflow/react": "^12.9.3",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "happy-dom": "^21.0.4",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.0"
+  }
+}
