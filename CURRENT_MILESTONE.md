@@ -10,7 +10,9 @@
 - [x] Branding and public setup documentation updated
 - [x] Build, tests, API coverage, Docker configuration, and browser branding verified
 - [x] Exact staged files and Git history checked for credentials and local runtime data
-- [ ] Release committed, pushed, and publicly readable on GitHub
+- [x] Release committed, pushed, and publicly readable on GitHub
+
+**Published:** [Stormxftw/nest-for-raven](https://github.com/Stormxftw/nest-for-raven), `main`, verified on 2026-10-31. Anonymous requests can read the repository, README, and example screenshot; the remote release matches the local commit. The previous repository history is preserved.
 
 **Not part of this milestone:** New Raven capabilities, a hosted deployment, a package-registry release, changing Docker data volumes, or a new live-model mission.
 

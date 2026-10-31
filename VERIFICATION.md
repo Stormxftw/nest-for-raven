@@ -8,6 +8,7 @@
 - A fresh Example-mode browser check confirms the Nest title, accessible navigation label, footer, and served icon. The inspected **1600 × 1000** screenshot at [docs/nest-for-raven.png](docs/nest-for-raven.png) contains only the bundled illustrative mission. It is the one curated capture included in the public repository.
 - High-signal credential patterns were checked across the release files and all **128 existing history blobs**, with no matches. No local Raven data, credentials, dependency checkout, build output, or private test capture is included. This is a focused publication check, not a comprehensive security audit.
 - No new live-model turn was run for the naming/publication change. Earlier model and Docker evidence remains dated separately below.
+- Published at [Stormxftw/nest-for-raven](https://github.com/Stormxftw/nest-for-raven) with the existing history preserved. Unauthenticated GitHub requests returned HTTP 200 for the public repository metadata, `main` reference, README, and screenshot. The remote commit and both downloaded files matched the local release.
 
 Date: 2026-10-30. Windows, Node 24.19, Python 3.12, Raven 0.2.6 at `9d9bec90bcd76186d2981fd23b3b6280d83e3684`.
 
