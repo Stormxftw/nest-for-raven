@@ -1,26 +1,40 @@
-# Raven Spatial
+# Nest for Raven
 
-A custom local web interface for [EverMind AI's Raven](https://github.com/evermind-ai/raven). Version 0.2 puts a working conversation beside a compact, colorful task map. You can send a mission, watch streaming output, steer or stop a turn, resume a specialist conversation, and bring its updates back to the host.
+Nest for Raven is an independent local web interface for [EverMind AI's Raven](https://github.com/evermind-ai/raven). Version 0.2 puts a working conversation beside a readable, fixed task hierarchy. You can send a mission, watch streaming output, steer or stop a turn, resume a specialist conversation, and bring its updates back to the host.
 
-The interface is React/TypeScript. Raven owns models, tools, permissions, storage, and agent execution. Its downloaded source is untouched and Git-ignored. Created in [T3 Code](https://t3.codes).
+The interface is React/TypeScript. Raven owns models, tools, permissions, storage, and agent execution. Its downloaded source is untouched and Git-ignored. Nest for Raven is a community interface, not the official Raven project. Created in [T3 Code](https://t3.codes).
+
+![Nest for Raven: parchment conversation workspace, specialist agents, and a fixed task hierarchy](docs/nest-for-raven.png)
 
 ## Run
 
-Requirements: Node.js 22.12+ (verified with 24.19), npm. From this directory:
+To run the **Raven harness and its bundled interface in Docker**, see [DOCKER.md](DOCKER.md). Its local address is http://127.0.0.1:18793; it uses separate persistent data. The instructions below run this repository's custom UI.
+
+Requirements: Node.js 22.12+ (verified with 24.19), npm. Clone the repository, then run:
 
 ```powershell
+git clone https://github.com/Stormxftw/nest-for-raven.git
+cd nest-for-raven
 npm ci
 npm run build
 npm start
 ```
 
-Open **http://127.0.0.1:4173**. This starts in labeled **Example mode**. No model work runs there. Explore the team, node Output/Prompt/Files, and replay. Each recipient has its own draft. On phones, switch Conversation / Team map using the top tabs. Use Fit View after resizing.
+Open **http://127.0.0.1:4173**. This starts in labeled **Example mode**. No model work runs there. Explore the team, node Properties/Output/Prompt/Files, and replay. Each recipient has its own draft. On phones, switch Conversation / Team map using the top tabs.
+
+The task map is a fixed, top-down hierarchy: the host comes first, prerequisites sit above dependent work, and parallel branches share a row. Cards cannot be dragged, moved with arrow keys, or deleted. Connectors use quiet right-angle paths. The chart scrolls at full text size instead of shrinking the whole mission; the up-arrow control returns to the host. Large, wide graphs can also scroll horizontally.
+
+Select a task to read its reported properties. Output, Prompt, and Files remain in adjacent tabs; **Talk** opens a resumable specialist conversation. On desktop, the expand icon or the rail's Team map button opens a larger chart with a side inspector. Status changes and reordered snapshots leave positions unchanged. New dependencies or branches can reorganize the hierarchy; no manual layout is stored.
+
+The visual direction is parchment and ink: warm paper textures on the working surfaces, a dark green tool rail, and filled gold/teal/coral/violet agent badges. Serif type is limited to the Nest name and display headings. Conversation text remains 16px system sans-serif; task labels remain 15px on desktop and 14px on phones without canvas scaling. The paper grain is a small local SVG, with no external asset service.
+
+In Example mode, press the **Play** icon in the map header to preview the task lifecycle: a new build task arrives, starts working, completes, then a review task arrives and requests attention. Playback finishes after about 11 seconds. **Stop** holds the current example stage; Play starts again; **Replay step** returns to the manual example. No agents execute during this preview. Cards and connectors remain still. The activity track fills according to completed task count, with a small travelling ember while tasks or the host are working. The count is not an estimate of elapsed time. Attention changes the track color; completed/idle work stops the flare. Pausing the example stops the flare, and reduced-motion preferences suppress both the flare and working spinners. This takes inspiration from the aura-kit project’s state-driven displays; no aura-kit runtime code or assets were imported.
 
 `npm run dev` is available for editing. The production bundle above is the verified launch path; one development dependency-optimization hang was observed during package installation and switching to the production bundle recovered it.
 
 ## Connect Raven
 
-Requirements: Python 3.12, [uv](https://docs.astral.sh/uv/), Git. The clone and environment already exist here. For a fresh checkout:
+Requirements: Python 3.12, [uv](https://docs.astral.sh/uv/), Git. Install the pinned backend for a fresh checkout:
 
 ```powershell
 git clone https://github.com/evermind-ai/raven.git upstream-raven
@@ -88,10 +102,37 @@ These scripts create an ignored temporary `.raven-local/test-auth.json` for brow
 
 Exact evidence and limitations are in [VERIFICATION.md](VERIFICATION.md).
 
+For the map interaction checks, open the running app in a named Playwright CLI session, then run:
+
+```powershell
+npx --yes --package @playwright/cli playwright-cli -s=raven-map open http://127.0.0.1:4173
+npx --yes --package @playwright/cli playwright-cli -s=raven-map run-code --filename=scripts/check-task-map.cjs
+npx --yes --package @playwright/cli playwright-cli -s=raven-map run-code --filename=scripts/check-task-map-refresh.cjs
+npx --yes --package @playwright/cli playwright-cli -s=raven-map close
+```
+
+The first script uses the labeled example. The second intercepts the gateway socket with simulated task snapshots to check polling, new task arrival, and mission isolation. Neither script runs a model. Use a fresh page for the first script and close the test browser afterward to discard the simulated socket route.
+
+For lifecycle state, stop/restart, fixed-card, and reduced-motion checks, run `scripts/check-task-motion.cjs` with the same `run-code --filename=...` command on a fresh page. Captures are saved under `output/playwright/`. The connected polling script verifies completion, new tasks, repeated snapshots, and mission switches without moving or animating the cards.
+
+For Chromium phone emulation with actual touch input, run `scripts/check-task-touch.cjs`. It verifies a native swipe, task selection by tap, and return-to-host scrolling in a separate temporary browser context. This is emulation, not a physical-device check.
+
+For the material/contrast/activity checks, run `scripts/check-parchment.cjs` in the same named Playwright session. It checks the local grain asset, representative text contrast, actual flare movement without node movement, reduced motion, and the 1366×768 layout.
+
+## Feature roadmap
+
+[RAVEN_FEATURE_PLAN.md](RAVEN_FEATURE_PLAN.md) maps Raven functionality to proposed pages, current implementation status, backend dependencies, acceptance checks, and ordered releases. [The API coverage appendix](docs/RAVEN_API_COVERAGE.md) assigns all 248 methods in the pinned contract to a page and identifies upstream stubs/missing handlers. The plan does not mean those pages have been implemented.
+
+With the pinned `upstream-raven` checkout present, verify the inventory with:
+
+```powershell
+python scripts/check-raven-coverage.py --check
+```
+
 ## Boundaries
 
 This is the first input-capable release, not full Raven feature parity. Attachments, credential entry, provider/agent configuration screens, schedules, playbooks, memory management, file editing, and multi-user hosting remain outside 0.2. Credential requests direct you to Raven's native interface. Only approval cards can be rehydrated through Raven's pending-request API; a clarification/confirmation missed during a disconnected period may require stopping and retrying the turn.
 
-Raven-General runs in-process; other specialists depend on their installed adapters and dependencies. This environment does not have Raven-Design's engine or Raven-Research's optional engine installed. The colorful multi-agent example is illustrative, not a claim that every illustrated specialist is ready locally. Task snapshots refresh every four seconds; conversation tokens stream live. Large graphs currently use a simple compact grid.
+Raven-General runs in-process; other specialists depend on their installed adapters and dependencies. The verified local setup did not have Raven-Design's engine or Raven-Research's optional engine installed. The colorful multi-agent example is illustrative, not a claim that every illustrated specialist is ready locally. Task snapshots refresh every four seconds; conversation tokens stream live. Large graphs use a fixed dependency hierarchy with scrolling.
 
 The creative direction and future input-functionality inventory are in [BACKLOG.md](BACKLOG.md).

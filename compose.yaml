@@ -1,0 +1,29 @@
+# Raven's official image recipe, built for this machine from the pinned checkout.
+name: raven-harness
+
+services:
+  raven:
+    image: raven-harness:9d9bec9
+    build:
+      context: ./upstream-raven
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18793:80"
+    environment:
+      RAVEN_WEB_PORT: "18793"
+      RAVEN_PAGE_PORT: "18793"
+      RAVEN_AUTO_LOGIN: "1"
+      TZ: America/New_York
+    volumes:
+      - raven-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS -m 3 http://127.0.0.1/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 180s
+      retries: 3
+    stop_grace_period: 30s
+
+volumes:
+  raven-data:

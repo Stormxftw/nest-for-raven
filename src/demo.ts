@@ -21,6 +21,22 @@ export function exampleTasks(step: number): Task[] {
   if (step >= 3) { replay[3].status = 'exception'; replay[3].error = 'The mobile capture shows a clipped save button. A human review is needed before sharing.' }
   return [{id: 'fieldnotes-01', kind: 'dag', task_summary: 'From idea to first usable prototype', status: step >= 3 ? 'exception' : 'running', nodes: replay}]
 }
+
+export const motionStages = [
+  'Ready to build', 'Build task arrives', 'Code is working', 'Build complete',
+  'Review task arrives', 'Review is working', 'Review needs your attention',
+] as const
+
+/** A finite, explicit demo. It never drives RPC or invents connected progress. */
+export function motionExampleTasks(step: number): Task[] {
+  const replay = structuredClone(nodes.slice(0, step === 0 ? 2 : step < 4 ? 3 : 4))
+  if (replay[2]) replay[2].status = step === 1 ? 'pending' : step === 2 ? 'running' : 'completed'
+  if (replay[3]) {
+    replay[3].status = step === 4 ? 'pending' : step === 5 ? 'running' : 'exception'
+    if (step === 6) replay[3].error = 'The mobile save button needs a human review before sharing.'
+  }
+  return [{id:'fieldnotes-01',kind:'dag',task_summary:'From idea to first usable prototype',status:step === 6 ? 'exception' : 'running',nodes:replay}]
+}
 export const exampleDetail: Record<string, Detail> = {
   research: {prompt: 'Identify the primary user and the smallest useful workflow for a personal idea notebook.', output: 'Primary user: someone collecting fragments while working.\n\nFirst workflow: write a note → save it → find it again.\n\nKeep capture immediate. Use a plain list and a small search field. Accounts and collaboration can wait.'},
   design: {prompt: 'Define a calm, readable visual direction using the audience findings.', output: 'Warm paper, dark ink, and a single green accent.\n\nA generous writing surface. Titles use a serif; controls use a practical sans serif. Saving should feel quiet and dependable.'},

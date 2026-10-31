@@ -15,7 +15,7 @@ async (page) => {
   if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Mobile horizontal overflow');
   await page.screenshot({path:'output/playwright/v2-mobile.png'});
   await page.getByRole('button', {name:'Show team map',exact:true}).click();
-  await page.getByRole('button', {name:'Fit View',exact:true}).click();
+  await page.getByRole('button', {name:'Scroll to mission host',exact:true}).click();
   await page.getByRole('region', {name:'Node inspector'}).waitFor();
   await page.screenshot({path:'output/playwright/v2-mobile-map.png'});
   await page.getByRole('button', {name:'Show conversation',exact:true}).click();
