@@ -32,6 +32,12 @@ Library check: [React Flow custom nodes](https://reactflow.dev/learn/customizati
 4. Add an attention inbox and artifact review grounded in Raven events.
 5. Explore always-on schedules, playbooks, memory, and multiple harnesses after the first control workflow works reliably.
 
+## Theme controls and element picker — Joe's feature request, 2026-10-31
+
+Map every UI surface to its own control so a person can make custom color themes easily. Add a picker tool on top of that: turn on the picker, click the thing you want to change, and the correct field opens for editing.
+
+This is a proposal, not an implemented feature, and it is not scheduled yet. Starting point: `src/styles.css` holds 307 hardcoded hex colors (153 distinct) alongside a small set of CSS variables, so those colors need to become named tokens, each mapped to a control. The picker can then resolve a clicked element to its token.
+
 ## Deferred review nit
 
 S3: Rare history-before-replay ordering can briefly duplicate a direct specialist answer until the next four-second history refresh. Sol reproduced it with an in-memory hook stub; the App's target reset on reconnect limits exposure. Deferred from 0.2 because it is transient and does not block the verified workflow. Small follow-up: retain live markers on snapshot messages, drop live assistant snapshot rows when direct stream events begin, and add the ordering regression test.
